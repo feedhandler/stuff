@@ -21,6 +21,34 @@ Wrapper::Wrapper(string name)
   callbackFuncInfo.callback_p = Wrapper::callbackFunc;
   
   sessionCreate(&callbackFuncInfo);
+  
+  
+  // TODO
+  // when class is created, create a thing on the heap
+  // callback user_p must point the thing, not to the *this
+  // question: how to make link to the c++ object?? if it has moved??
+  
+}
+
+// move constructor
+Wrapper::Wrapper(Wrapper&& other)
+  : mLogger(other.mLogger)
+{
+  
+
+
+//~ // pilfer other's resource
+
+//~ size=other.size;
+
+//~ buf=other.buf;
+
+//~ // reset other
+
+//~ other.size=0;
+
+//~ other.buf=nullptr;
+
 }
 
 void Wrapper::async_callback(int id)

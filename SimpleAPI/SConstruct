@@ -1,7 +1,7 @@
 # SConstruct for use with cuppa
 import os
 import cuppa
-
+    
 class log4cpp( cuppa.profile( 'log4cpp' ) ):
   def __call__( self, env, toolchain, variant ):
     LOG4CPP_HOME = os.getenv('LOG4CPP_HOME', '/usr/local');
@@ -9,18 +9,12 @@ class log4cpp( cuppa.profile( 'log4cpp' ) ):
     env.AppendUnique( LIBPATH    = [os.path.join(LOG4CPP_HOME, 'lib')] )
     env.AppendUnique( STATICLIBS = ['log4cpp'] )
 
-# to use devtoolset-6 on Centos we need to tell scons to use the compiler from the $PATH
-class devtoolset( cuppa.profile( 'devtoolset' ) ):
-  def __call__( self, env, toolchain, variant ):
-    env['ENV']['PATH'] = os.environ['PATH'];
-
 # Call sconscripts to do the work
 cuppa.run(
   default_options = {
-    'offline': True,
+    'parallel': True,
   },
   default_profiles = [
-    devtoolset,
     log4cpp,
   ],
   default_variants = [

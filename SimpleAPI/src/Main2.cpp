@@ -1,4 +1,4 @@
-// This is a demo of how you can convert a C callback into a C++ callback
+// Convert a C callback into a C++ callback
 
 #include "Utils.h"
 #include "SimpleAPI.h"
@@ -12,7 +12,7 @@
 using namespace std;
 
 // the C callback function
-static void callbackFunc(int id, void *user_p)
+static void c_callback(int id, void *user_p)
 {
   log4cpp::Category::getInstance(__FUNCTION__).noticeStream() << "Got " << id;
 }
@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
   // C-style callback
   CallbackFuncInfo callbackFuncInfo;
   callbackFuncInfo.user_p = nullptr;
-  callbackFuncInfo.callback_p = callbackFunc;
+  callbackFuncInfo.callback_p = c_callback;
   sessionCreate(&callbackFuncInfo);
   
   // C++ callbacks

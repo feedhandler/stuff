@@ -12,6 +12,13 @@ class Wrapper
 public:
   Wrapper(std::string name);
   
+  // No copy or assignment
+  Wrapper(const Wrapper&) = delete;
+  Wrapper& operator=(const Wrapper&) = delete;
+  
+  Wrapper(Wrapper&&);
+  Wrapper& operator=(Wrapper&&);  
+  
   virtual void async_callback(int id);
   
 protected:
