@@ -34,11 +34,13 @@ int main(int argc, char* argv[])
   logger.notice("start");
   simpleStart();
   
-  this_thread::sleep_for(10s);
+  this_thread::sleep_for(5s);
   
   logger.notice("stop");
   simpleStop();
   
   this_thread::sleep_for(2s);
   logger.notice("finished");
+  
+  // TODO check memory leaks
 }

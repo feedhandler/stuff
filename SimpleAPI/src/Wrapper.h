@@ -7,6 +7,15 @@
 #include "log4cpp/Category.hh"
 #include <string>
 
+class Wrapper;
+
+struct WrapperImpl
+{
+  // the C callback function
+  static void callbackFunc(int id, void *user_p);
+  Wrapper* mParent;
+};
+
 class Wrapper
 {
 public:
@@ -17,7 +26,9 @@ public:
   Wrapper& operator=(const Wrapper&) = delete;
   
   Wrapper(Wrapper&&);
-  Wrapper& operator=(Wrapper&&);  
+  Wrapper& operator=(Wrapper&&);
+  
+  virtual ~Wrapper();
   
   virtual void async_callback(int id);
   
@@ -25,6 +36,5 @@ protected:
   log4cpp::Category& mLogger;
   
 private:
-  // the C callback function
-  static void callbackFunc(int id, void *user_p);
+  WrapperImpl* mImpl; // TODO use smart pointer
 };
