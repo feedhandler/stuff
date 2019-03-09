@@ -1,0 +1,4 @@
+Import('env')
+
+env.Build('Main1', ['Main1.cpp', 'SimpleAPI.cpp', 'Utils.cpp'])
+env.Build('Main2', ['Main2.cpp', 'SimpleAPI.cpp', 'Wrapper.cpp', 'Utils.cpp'])
