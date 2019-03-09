@@ -33,18 +33,41 @@ Wrapper::Wrapper(Wrapper&& other)
 {
   mImpl->mParent=this;
   
+  // reset other
   other.mImpl = nullptr;
 }
 
-// TODO move assignment
+// move assignment
+Wrapper& Wrapper::operator=(Wrapper&& other)
+{
+  if (this!=&other)
+  {
+    // release the current object's resources
+    if (mImpl)
+    {
+      delete mImpl;
+      mImpl = nullptr;
+    }
+
+    // pilfer other's resource
+    mImpl = other.mImpl;
+    mImpl->mParent = this;
+
+    // reset other
+    other.mImpl = nullptr;
+  }
+
+  return *this;
+}
 
 Wrapper::~Wrapper()
 {
-  if (mImpl)
-  {
-    delete mImpl;
-    mImpl = nullptr;
-  }
+  // not needed if using smart pointer
+  //~ if (mImpl)
+  //~ {
+    //~ delete mImpl;
+    //~ mImpl = nullptr;
+  //~ }
 }
 
 void Wrapper::async_callback(int id)

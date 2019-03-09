@@ -5,6 +5,8 @@
 
 #include "SimpleAPI.h"
 #include "log4cpp/Category.hh"
+
+#include <memory>
 #include <string>
 
 class Wrapper;
@@ -36,5 +38,5 @@ protected:
   log4cpp::Category& mLogger;
   
 private:
-  WrapperImpl* mImpl; // TODO use smart pointer
+  std::unique_ptr<WrapperImpl> mImpl;
 };
