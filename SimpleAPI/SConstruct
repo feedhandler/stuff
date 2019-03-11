@@ -1,15 +1,6 @@
 # SConstruct for use with cuppa
 import os
 
-try:
-  import cuppa
-except ImportError:
-  print "Cuppa not found, installing..."
-  import subprocess, shlex
-  subprocess.call( shlex.split( 'pip install cuppa -t .' ) )
-  import cuppa
-
-
 # Call sconscripts to do the work
 cuppa.run(
   default_options = {

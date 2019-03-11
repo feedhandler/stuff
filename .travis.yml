@@ -1,9 +1,9 @@
-language: cpp
 dist: xenial
+language: generic
 
 install:
   - sudo apt-get install scons
-  - pip install cuppa --user
+  - pip install cuppa
 
 script:
   - cd SimpleAPI
