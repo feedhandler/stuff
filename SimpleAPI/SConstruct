@@ -1,5 +1,6 @@
 # SConstruct for use with cuppa
 import os
+import cuppa
 
 # Call sconscripts to do the work
 cuppa.run(
