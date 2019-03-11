@@ -3,7 +3,7 @@ dist: xenial
 
 install:
   - sudo apt-get install scons
-  - sudo pip install vcs
+  - pip install cuppa --user
 
 script:
   - cd SimpleAPI
