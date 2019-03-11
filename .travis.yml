@@ -3,7 +3,7 @@ language: cpp
 
 install:
   - sudo apt-get install scons
-  - pip install colorama --user
+  - pip install colorama jinja2 --user
 
 script:
   - cd SimpleAPI
