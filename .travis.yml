@@ -1,11 +1,11 @@
 dist: xenial
-language: generic
+language: cpp
 
 install:
   - sudo apt-get install scons
   - sudo pip install cuppa --user
-  - sudo pip install vcs --user
 
 script:
   - cd SimpleAPI
+  - export PYTHONPATH=$(python -c "import site; print(site.USER_SITE)"):$PYTHONPATH
   - scons
