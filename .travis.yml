@@ -1,1 +1,5 @@
 language: cpp
+dist: xenial
+
+script:
+  - scons --version
