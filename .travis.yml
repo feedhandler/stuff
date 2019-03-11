@@ -3,9 +3,8 @@ language: cpp
 
 install:
   - sudo apt-get install scons
-  - sudo pip install cuppa --user
+  - pip install cuppa --user
 
 script:
   - cd SimpleAPI
-  - export PYTHONPATH=$(python -c "import site; print(site.USER_SITE)"):$PYTHONPATH
   - scons
