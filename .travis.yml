@@ -3,7 +3,7 @@ language: cpp
 
 install:
   - sudo apt-get install scons
-  - pip install colorama jinja2 grip --user
+  - pip install colorama grip jinja2 lxml.html --user
 
 script:
   - cd SimpleAPI
