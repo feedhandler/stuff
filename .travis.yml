@@ -3,9 +3,8 @@ language: cpp
 
 install:
   - sudo apt-get install scons
-  - pip install cuppa --user
-  - pip install vcs --user
 
 script:
   - cd SimpleAPI
+  - git clone https://github.com/ja11sop/cuppa.git site_scons
   - scons
