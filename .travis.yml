@@ -3,6 +3,8 @@ dist: xenial
 
 install:
   - sudo apt-get install scons
+  - sudo pip install cuppa
 
 script:
-  - scons --version
+  - cd SimpleAPI
+  - scons
