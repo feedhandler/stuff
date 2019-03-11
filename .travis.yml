@@ -1,5 +1,8 @@
 language: cpp
 dist: xenial
 
+install:
+  - sudo apt-get install scons
+
 script:
   - scons --version
