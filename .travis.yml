@@ -3,7 +3,8 @@ language: generic
 
 install:
   - sudo apt-get install scons
-  - sudo pip install cuppa
+  - sudo pip install cuppa --user
+  - sudo pip install vcs --user
 
 script:
   - cd SimpleAPI
