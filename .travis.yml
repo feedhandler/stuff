@@ -3,6 +3,7 @@ dist: xenial
 
 install:
   - sudo apt-get install scons
+  - sudo pip install vcs
 
 script:
   - cd SimpleAPI
