@@ -2,24 +2,13 @@
 import os
 import cuppa
     
-tpNexus = ''
-    
-# a logging library
-class log4cpp( cuppa.location_dependency('log4cpp', 'http://tpnexus.eur.ad.tullib.com:8081/repository/core-services/3rdparty/binaries/log4cpp-1.1.3b-gcc62-x86_64.tgz') ):
-  def __call__( self, env, toolchain, variant ):
-    super(log4cpp, self).__call__(env, toolchain, variant)
-    LOG4CPP_HOME = self.local_sub_path()
-    env.AppendUnique( SYSINCPATH = os.path.join(LOG4CPP_HOME, 'include') )
-    env.AppendUnique( LIBPATH = os.path.join(LOG4CPP_HOME, 'lib') )
-    env.AppendUnique( STATICLIBS = ['log4cpp'])
-
 # Call sconscripts to do the work
 cuppa.run(
   default_options = {
     'parallel': True,
   },
   default_dependencies = [
-    log4cpp,
+    cuppa.location_dependency('spdlog', location="git+https://github.com/gabime/spdlog.git@v1.3.1", sys_include='include')
   ],
   default_variants = [
     'dbg',

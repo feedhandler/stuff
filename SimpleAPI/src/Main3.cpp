@@ -4,7 +4,7 @@
 #include "SimpleAPI.h"
 #include "Wrapper.h"
 
-#include <log4cpp/Category.hh>
+#include "spdlog/spdlog.h"
 
 #include <chrono>
 #include <thread>
@@ -22,22 +22,20 @@ int main(int argc, char* argv[])
 {
   initializeLogging();
 
-  auto& logger = log4cpp::Category::getInstance("main");
-  
   vector<Wrapper> wrappers;
   addWrapper("alice", wrappers);
   addWrapper("bob", wrappers);
   
-  logger.notice("start");
+  spdlog::info("start");
   simpleStart();
   
   this_thread::sleep_for(5s);
   
-  logger.notice("stop");
+  spdlog::info("stop");
   simpleStop();
   
   this_thread::sleep_for(2s);
-  logger.notice("finished");
+  spdlog::info("finished");
   
   // TODO check memory leaks
 }

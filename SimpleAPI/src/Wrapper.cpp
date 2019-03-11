@@ -1,6 +1,6 @@
 #include "Wrapper.h"
 #include "SimpleAPI.h"
-#include "log4cpp/Category.hh"
+#include "spdlog/spdlog.h"
 
 using namespace std;
 
@@ -52,5 +52,5 @@ Wrapper& Wrapper::operator=(Wrapper&& other)
 
 void Wrapper::async_callback(int id)
 {
-  log4cpp::Category::getInstance(mName).noticeStream() << "got " << id;
+  spdlog::info("{} got {}", mName, id);
 }

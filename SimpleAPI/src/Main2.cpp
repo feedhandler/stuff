@@ -4,7 +4,7 @@
 #include "SimpleAPI.h"
 #include "Wrapper.h"
 
-#include <log4cpp/Category.hh>
+#include "spdlog/spdlog.h"
 
 #include <chrono>
 #include <thread>
@@ -14,7 +14,7 @@ using namespace std;
 // the C callback function
 static void c_callback(int id, void *user_p)
 {
-  log4cpp::Category::getInstance(__FUNCTION__).noticeStream() << "Got " << id;
+  spdlog::info("{} got {}", __FUNCTION__, id);
 }
 
 // derived class, to make demonstrate that we call the override correctly
@@ -27,15 +27,13 @@ public:
     
   virtual void async_callback(int id) override
   {
-    log4cpp::Category::getInstance(mName).noticeStream() << "GOT " << id;
+    spdlog::info("{} GOT {}", mName, id);
   }
 };
 
 int main(int argc, char* argv[])
 {
   initializeLogging();
-
-  auto& logger = log4cpp::Category::getInstance("main");
 
   // C-style callback
   CallbackFuncInfo callbackFuncInfo;
@@ -47,14 +45,14 @@ int main(int argc, char* argv[])
   Wrapper wrapper("alice");
   FancyWrapper fancyWrapper("bob");
   
-  logger.notice("start");
+  spdlog::info("start");
   simpleStart();
   
   this_thread::sleep_for(5s);
   
-  logger.notice("stop");
+  spdlog::info("stop");
   simpleStop();
   
   this_thread::sleep_for(1500ms);
-  logger.notice("finished");
+  spdlog::info("finished");
 }
