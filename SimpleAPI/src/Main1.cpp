@@ -1,4 +1,4 @@
-// using the API will C callbacks
+// Example of using the SimpleAPI with C callbacks
 
 #include "Utils.h"
 #include "SimpleAPI.h"

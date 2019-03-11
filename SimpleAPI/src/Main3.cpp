@@ -1,4 +1,4 @@
-// Demo of how Wrapper class can break
+// Example showing how our Wrapper class can be std::move-d
 
 #include "Utils.h"
 #include "SimpleAPI.h"
@@ -23,13 +23,10 @@ int main(int argc, char* argv[])
   initializeLogging();
 
   auto& logger = log4cpp::Category::getInstance("main");
-
   
   vector<Wrapper> wrappers;
   addWrapper("alice", wrappers);
   addWrapper("bob", wrappers);
-  
-  
   
   logger.notice("start");
   simpleStart();

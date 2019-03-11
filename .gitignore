@@ -1,5 +1,9 @@
+# scons stuff
 .sconf_temp
 .sconsign.dblite
+
+# cuppa stuff
 config.log
 _build
 _cuppa
+configure.conf

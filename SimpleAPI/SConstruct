@@ -2,19 +2,23 @@
 import os
 import cuppa
     
-class log4cpp( cuppa.profile( 'log4cpp' ) ):
+tpNexus = ''
+    
+# a logging library
+class log4cpp( cuppa.location_dependency('log4cpp', 'http://tpnexus.eur.ad.tullib.com:8081/repository/core-services/3rdparty/binaries/log4cpp-1.1.3b-gcc62-x86_64.tgz') ):
   def __call__( self, env, toolchain, variant ):
-    LOG4CPP_HOME = os.getenv('LOG4CPP_HOME', '/usr/local');
-    env.AppendUnique( SYSINCPATH = [os.path.join(LOG4CPP_HOME, 'include')] )
-    env.AppendUnique( LIBPATH    = [os.path.join(LOG4CPP_HOME, 'lib')] )
-    env.AppendUnique( STATICLIBS = ['log4cpp'] )
+    super(log4cpp, self).__call__(env, toolchain, variant)
+    LOG4CPP_HOME = self.local_sub_path()
+    env.AppendUnique( SYSINCPATH = os.path.join(LOG4CPP_HOME, 'include') )
+    env.AppendUnique( LIBPATH = os.path.join(LOG4CPP_HOME, 'lib') )
+    env.AppendUnique( STATICLIBS = ['log4cpp'])
 
 # Call sconscripts to do the work
 cuppa.run(
   default_options = {
     'parallel': True,
   },
-  default_profiles = [
+  default_dependencies = [
     log4cpp,
   ],
   default_variants = [

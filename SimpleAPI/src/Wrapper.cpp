@@ -1,4 +1,6 @@
 #include "Wrapper.h"
+#include "SimpleAPI.h"
+#include "log4cpp/Category.hh"
 
 using namespace std;
 
@@ -14,13 +16,13 @@ void WrapperImpl::callbackFunc(int id, void *user_p)
 
 // constructor
 Wrapper::Wrapper(string name)
-  : mLogger(log4cpp::Category::getInstance(name))
-  , mImpl(new WrapperImpl)
+  : mName(name)
+  , mImpl(make_unique<WrapperImpl>())
 {
   mImpl->mParent=this;
   
   CallbackFuncInfo callbackFuncInfo;
-  callbackFuncInfo.user_p = mImpl;
+  callbackFuncInfo.user_p = mImpl.get();
   callbackFuncInfo.callback_p = WrapperImpl::callbackFunc;
   
   sessionCreate(&callbackFuncInfo);
@@ -28,13 +30,11 @@ Wrapper::Wrapper(string name)
 
 // move constructor
 Wrapper::Wrapper(Wrapper&& other)
-  : mLogger(other.mLogger)
-  , mImpl(other.mImpl)
+  : mName(std::move(other.mName))
+  , mImpl(std::move(other.mImpl))
 {
+  // TODO google for PImpl reference to parent
   mImpl->mParent=this;
-  
-  // reset other
-  other.mImpl = nullptr;
 }
 
 // move assignment
@@ -42,35 +42,15 @@ Wrapper& Wrapper::operator=(Wrapper&& other)
 {
   if (this!=&other)
   {
-    // release the current object's resources
-    if (mImpl)
-    {
-      delete mImpl;
-      mImpl = nullptr;
-    }
-
-    // pilfer other's resource
-    mImpl = other.mImpl;
+    mImpl = std::move(other.mImpl);
+    mName = std::move(other.mName);
     mImpl->mParent = this;
-
-    // reset other
-    other.mImpl = nullptr;
   }
 
   return *this;
 }
 
-Wrapper::~Wrapper()
-{
-  // not needed if using smart pointer
-  //~ if (mImpl)
-  //~ {
-    //~ delete mImpl;
-    //~ mImpl = nullptr;
-  //~ }
-}
-
 void Wrapper::async_callback(int id)
 {
-  mLogger.noticeStream() << " got " << id;
+  log4cpp::Category::getInstance(mName).noticeStream() << "got " << id;
 }

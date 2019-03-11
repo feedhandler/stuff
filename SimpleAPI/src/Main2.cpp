@@ -1,4 +1,4 @@
-// Convert a C callback into a C++ callback
+// This example shows two things how to convert a the C callback into a C++ callback
 
 #include "Utils.h"
 #include "SimpleAPI.h"
@@ -27,7 +27,7 @@ public:
     
   virtual void async_callback(int id) override
   {
-    mLogger.noticeStream() << " GOT " << id;
+    log4cpp::Category::getInstance(mName).noticeStream() << "GOT " << id;
   }
 };
 
@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
   logger.notice("start");
   simpleStart();
   
-  this_thread::sleep_for(10s);
+  this_thread::sleep_for(5s);
   
   logger.notice("stop");
   simpleStop();
