@@ -27,12 +27,12 @@ int main(int argc, char* argv[])
   addWrapper("bob", wrappers);
   
   spdlog::info("start");
-  simpleStart();
+  SimpleAPI::start();
   
   this_thread::sleep_for(5s);
   
   spdlog::info("stop");
-  simpleStop();
+  SimpleAPI::stop();
   
   this_thread::sleep_for(2s);
   spdlog::info("finished");

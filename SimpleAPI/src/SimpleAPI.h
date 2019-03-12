@@ -1,20 +1,16 @@
 #pragma once
 
-// callback function prototype
-typedef void (*callbackFunc_t) (int id, void *user_p);
-
-// callback function info
-struct CallbackFuncInfo
+namespace SimpleAPI
 {
-  callbackFunc_t callback_p;
-  void *user_p;
-};
-  
-// create a session (i.e. register a callback handler)
-void sessionCreate(CallbackFuncInfo* funcInfo_p);
+  // callback function prototype
+  typedef void (*Callback) (int id, void *closure);
 
-// start dispatching
-void simpleStart();
+  // register a callback handler
+  void registerHandler(Callback callback, void *closure);
 
-// stop dispatching
-void simpleStop();
+  // start dispatching
+  void start();
+
+  // stop dispatching
+  void stop();
+}

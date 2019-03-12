@@ -25,23 +25,17 @@ int main(int argc, char* argv[])
 {
   initializeLogging();
 
-  // C-style callback
-  CallbackFuncInfo callbackFuncInfo;
-  callbackFuncInfo.user_p = nullptr;
-
-  callbackFuncInfo.callback_p = c_1;
-  sessionCreate(&callbackFuncInfo);
-  
-  callbackFuncInfo.callback_p = c_2;
-  sessionCreate(&callbackFuncInfo);
+  // C-style callbacks
+  SimpleAPI::registerHandler(c_1, nullptr);
+  SimpleAPI::registerHandler(c_2, nullptr);
   
   spdlog::info("start");
-  simpleStart();
+  SimpleAPI::start();
   
   this_thread::sleep_for(10s);
   
   spdlog::info("stop");
-  simpleStop();
+  SimpleAPI::stop();
   
   this_thread::sleep_for(2s);
   spdlog::info("finished");

@@ -6,35 +6,40 @@
 
 using namespace std;
 
-// storage for the callback handlers
-vector<CallbackFuncInfo> callbackFuncInfos;
-
-bool stop = false;
-
-void sessionCreate(CallbackFuncInfo* funcInfo_p)
+// storage for handlers registered with the API
+struct Handler
 {
-  callbackFuncInfos.push_back(*funcInfo_p);
+  SimpleAPI::Callback callback;
+  void *closure;
+};
+vector<Handler> handlers;
+
+void SimpleAPI::registerHandler(SimpleAPI::Callback callback, void* closure)
+{
+  handlers.push_back({callback, closure});
 }
 
-void simpleStart()
+bool run = false;
+
+void SimpleAPI::start()
 {
-  stop = false;
+  run = true;
   
   // to simulate event dispatching from a messaging API, we start a
   // thread here and iterate through the registered callback 
   // handlers, passing a different integer each time
   thread([](){
     int i=0;
-    while(!stop)
+    while(run)
     {
-      for(auto& cfi: callbackFuncInfos)
-        cfi.callback_p(++i, cfi.user_p);
+      for(auto& handler: handlers)
+        handler.callback(++i, handler.closure);
       this_thread::sleep_for(1s);
     }
   }).detach();
 }
 
-void simpleStop()
+void SimpleAPI::stop()
 {
-  stop = true;
+  run = false;
 }

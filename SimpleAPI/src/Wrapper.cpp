@@ -4,43 +4,38 @@
 
 using namespace std;
 
-struct Wrapper::Impl
+struct Wrapper::Bridge
 {
-  Impl(Wrapper* wrapper)
+  Bridge(Wrapper* wrapper)
     : mParent(wrapper)
     {}
   
   Wrapper* mParent;
 };
 
-void Wrapper::c_callback(int id, void *user_p)
+void Wrapper::c_callback(int id, void *closure)
 {
-  // get impl from closure
-  auto& impl = *static_cast<Wrapper::Impl*>(user_p);
-  
-  // call the object's async callback function
-  // Reminder: this will be on API's thread
-  impl.mParent->async_callback(id);
+  // call the object's async callback function via the bridge
+  // Reminder: this will be executed on the API's thread
+  static_cast<Wrapper::Bridge*>(closure)->mParent->async_callback(id);
 }
 
 // constructor
 Wrapper::Wrapper(string name)
   : mName(name)
-  , mImpl(make_unique<Wrapper::Impl>(this))
+  , mBridge(make_unique<Wrapper::Bridge>(this))
 {
-  CallbackFuncInfo callbackFuncInfo;
-  callbackFuncInfo.user_p = mImpl.get();
-  callbackFuncInfo.callback_p = Wrapper::c_callback;
-  
-  sessionCreate(&callbackFuncInfo);
+  // register a callback to the static c_callback function, and pass
+  // the address of the Bridge object as the closure
+  SimpleAPI::registerHandler(Wrapper::c_callback, mBridge.get());
 }
 
 // move constructor
 Wrapper::Wrapper(Wrapper&& other)
   : mName(std::move(other.mName))
-  , mImpl(std::move(other.mImpl))
+  , mBridge(std::move(other.mBridge))
 {
-  mImpl->mParent=this;
+  mBridge->mParent=this;
 }
 
 // move assignment
@@ -48,9 +43,9 @@ Wrapper& Wrapper::operator=(Wrapper&& other)
 {
   if (this!=&other)
   {
-    mImpl = std::move(other.mImpl);
+    mBridge = std::move(other.mBridge);
     mName = std::move(other.mName);
-    mImpl->mParent = this;
+    mBridge->mParent = this;
   }
 
   return *this;
@@ -63,4 +58,3 @@ void Wrapper::async_callback(int id)
 {
   spdlog::info("{} Got {}", mName, id);
 }
-
