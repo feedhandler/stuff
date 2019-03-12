@@ -1,5 +1,5 @@
 // example of how we can wrap the C-API in a C++ class and
-// give OO access to the async callbacks
+// give OO access to the callbacks
 
 #pragma once
 
