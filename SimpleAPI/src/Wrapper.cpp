@@ -4,26 +4,33 @@
 
 using namespace std;
 
-void WrapperImpl::callbackFunc(int id, void *user_p)
+struct Wrapper::Impl
 {
-  // cast closure to object
-  auto& wrapperImpl = *static_cast<WrapperImpl*>(user_p);
+  Impl(Wrapper* wrapper)
+    : mParent(wrapper)
+    {}
+  
+  Wrapper* mParent;
+};
+
+void Wrapper::c_callback(int id, void *user_p)
+{
+  // get impl from closure
+  auto& impl = *static_cast<Wrapper::Impl*>(user_p);
   
   // call the object's async callback function
-  // This will be on same thread as the C-callback
-  wrapperImpl.mParent->async_callback(id);
+  // Reminder: this will be on API's thread
+  impl.mParent->async_callback(id);
 }
 
 // constructor
 Wrapper::Wrapper(string name)
   : mName(name)
-  , mImpl(make_unique<WrapperImpl>())
+  , mImpl(make_unique<Wrapper::Impl>(this))
 {
-  mImpl->mParent=this;
-  
   CallbackFuncInfo callbackFuncInfo;
   callbackFuncInfo.user_p = mImpl.get();
-  callbackFuncInfo.callback_p = WrapperImpl::callbackFunc;
+  callbackFuncInfo.callback_p = Wrapper::c_callback;
   
   sessionCreate(&callbackFuncInfo);
 }
@@ -33,7 +40,6 @@ Wrapper::Wrapper(Wrapper&& other)
   : mName(std::move(other.mName))
   , mImpl(std::move(other.mImpl))
 {
-  // TODO google for PImpl reference to parent
   mImpl->mParent=this;
 }
 
@@ -50,7 +56,11 @@ Wrapper& Wrapper::operator=(Wrapper&& other)
   return *this;
 }
 
+// destructor must be in the cpp file, see Meyers Modern C++, item 22
+Wrapper::~Wrapper() = default;
+
 void Wrapper::async_callback(int id)
 {
-  spdlog::info("{} got {}", mName, id);
+  spdlog::info("{} Got {}", mName, id);
 }
+

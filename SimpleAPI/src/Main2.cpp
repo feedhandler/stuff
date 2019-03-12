@@ -17,7 +17,7 @@ static void c_callback(int id, void *user_p)
   spdlog::info("{} got {}", __FUNCTION__, id);
 }
 
-// derived class, to make demonstrate that we call the override correctly
+// derived classes, to make demonstrate that we call the overrides correctly
 class FancyWrapper: public Wrapper
 {
 public:
@@ -27,9 +27,23 @@ public:
     
   virtual void async_callback(int id) override
   {
+    spdlog::info("{} GOt {}", mName, id);
+  }
+};
+
+class SuperFancyWrapper: public FancyWrapper
+{
+public:
+  SuperFancyWrapper(std::string name)
+    : FancyWrapper(name)
+    {}
+    
+  virtual void async_callback(int id) override
+  {
     spdlog::info("{} GOT {}", mName, id);
   }
 };
+
 
 int main(int argc, char* argv[])
 {
@@ -42,8 +56,9 @@ int main(int argc, char* argv[])
   sessionCreate(&callbackFuncInfo);
   
   // C++ callbacks
-  Wrapper wrapper("alice");
-  FancyWrapper fancyWrapper("bob");
+  Wrapper w1("wrapper");
+  FancyWrapper w2("fancyWrapper");
+  SuperFancyWrapper w3("superFancyWrapper");
   
   spdlog::info("start");
   simpleStart();

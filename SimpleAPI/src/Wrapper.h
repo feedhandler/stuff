@@ -6,15 +6,6 @@
 #include <memory>
 #include <string>
 
-class Wrapper;
-
-struct WrapperImpl
-{
-  // the C callback function, it must match signature of SimpleAPI::callbackFunc_t
-  static void callbackFunc(int id, void *user_p);
-  Wrapper* mParent;
-};
-
 class Wrapper
 {
 public:
@@ -27,7 +18,7 @@ public:
   Wrapper(Wrapper&&);
   Wrapper& operator=(Wrapper&&);
   
-  virtual ~Wrapper() {};
+  virtual ~Wrapper();
   
   virtual void async_callback(int id);
   
@@ -35,5 +26,9 @@ protected:
   std::string mName;
 
 private:
-  std::unique_ptr<WrapperImpl> mImpl;
+  // the C callback function, it must match signature of SimpleAPI::callbackFunc_t
+  static void c_callback(int id, void *user_p);
+
+  struct Impl;
+  std::unique_ptr<Impl> mImpl;
 };

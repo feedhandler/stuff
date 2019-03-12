@@ -36,6 +36,4 @@ int main(int argc, char* argv[])
   
   this_thread::sleep_for(2s);
   spdlog::info("finished");
-  
-  // TODO check memory leaks
 }
