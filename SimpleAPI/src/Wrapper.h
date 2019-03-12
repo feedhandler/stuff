@@ -37,4 +37,5 @@ private:
   std::unique_ptr<Bridge> mBridge;
   // TODO could we do this? Maybe it is too confusing...
   std::unique_ptr<Wrapper*> mParent;
+  // TODO check that it works with multiple inheritance
 };
