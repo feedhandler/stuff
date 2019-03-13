@@ -1,3 +1,5 @@
+// C-style API, with a callback
+
 #pragma once
 
 // callback function type
