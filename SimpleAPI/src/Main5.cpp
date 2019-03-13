@@ -14,7 +14,7 @@ using namespace std;
 class Printer
 {
 public:
-  void print(string name, int id)
+  virtual void print(string name, int id)
   {
     spdlog::info("{} GOt {}", name, id);
   }
