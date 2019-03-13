@@ -8,4 +8,4 @@ install:
 script:
   - cd SimpleAPI
   - git clone https://github.com/ja11sop/cuppa.git site_scons
-  - scons
+  - scons --test
