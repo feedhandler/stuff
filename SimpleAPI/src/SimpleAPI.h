@@ -1,16 +1,18 @@
 #pragma once
 
-namespace SimpleAPI
-{
-  // callback function prototype
-  typedef void (*Callback) (int id, void *closure);
+// callback function type
+typedef void (*simple_callback) (int id, void *closure);
 
-  // register a callback handler
-  void registerHandler(Callback callback, void *closure);
+// register a callback
+// returns the handle (>=0)
+int simple_register(simple_callback callback, void *closure);
 
-  // start dispatching
-  void start();
+// unregister the callback associated with the specified handle
+// note: do not call this function from a callback, it will deadlock
+void simple_unregister(int handle);
 
-  // stop dispatching
-  void stop();
-}
+// start dispatching
+void simple_start();
+
+// stop dispatching
+void simple_stop();

@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
   initializeLogging();
 
   // C-style callback
-  SimpleAPI::registerHandler(c_callback, nullptr);
+  simple_register(c_callback, nullptr);
   
   // C++ callbacks
   Wrapper w1("wrapper");
@@ -58,12 +58,12 @@ int main(int argc, char* argv[])
   SuperFancyWrapper w3("superFancyWrapper");
   
   spdlog::info("start");
-  SimpleAPI::start();
+  simple_start();
   
   this_thread::sleep_for(5s);
   
   spdlog::info("stop");
-  SimpleAPI::stop();
+  simple_stop();
   
   this_thread::sleep_for(1500ms);
   spdlog::info("finished");

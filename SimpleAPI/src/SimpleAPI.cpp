@@ -2,26 +2,42 @@
 
 #include <chrono>
 #include <thread>
-#include <vector>
+#include <map>
+#include <mutex>
 
 using namespace std;
 
 // storage for handlers registered with the API
 struct Handler
 {
-  SimpleAPI::Callback callback;
+  simple_callback callback;
   void *closure;
 };
-vector<Handler> handlers;
+map<int,Handler> handlers;
 
-void SimpleAPI::registerHandler(SimpleAPI::Callback callback, void* closure)
+int handle=-1;
+
+std::mutex handlersMutex;
+
+int simple_register(simple_callback callback, void* closure)
 {
-  handlers.push_back({callback, closure});
+  std::lock_guard<std::mutex> lck(handlersMutex);
+
+  handle++;
+  handlers[handle]={callback, closure};
+  return handle;
+}
+
+void simple_unregister(int handle)
+{
+  std::lock_guard<std::mutex> lck(handlersMutex);
+  
+  handlers.erase(handle);
 }
 
 bool run = false;
 
-void SimpleAPI::start()
+void simple_start()
 {
   run = true;
   
@@ -32,14 +48,21 @@ void SimpleAPI::start()
     int i=0;
     while(run)
     {
-      for(auto& handler: handlers)
-        handler.callback(++i, handler.closure);
+      {
+        std::lock_guard<std::mutex> lck(handlersMutex);
+        for(auto& kv: handlers)
+        {
+          auto& handler(kv.second);
+          handler.callback(i, handler.closure);
+        }
+      }
       this_thread::sleep_for(1s);
+      i++;
     }
   }).detach();
 }
 
-void SimpleAPI::stop()
+void simple_stop()
 {
   run = false;
 }

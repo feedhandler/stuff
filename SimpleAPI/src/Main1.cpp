@@ -26,16 +26,16 @@ int main(int argc, char* argv[])
   initializeLogging();
 
   // C-style callbacks
-  SimpleAPI::registerHandler(c_1, nullptr);
-  SimpleAPI::registerHandler(c_2, nullptr);
+  simple_register(c_1, nullptr);
+  simple_register(c_2, nullptr);
   
   spdlog::info("start");
-  SimpleAPI::start();
+  simple_start();
   
   this_thread::sleep_for(10s);
   
   spdlog::info("stop");
-  SimpleAPI::stop();
+  simple_stop();
   
   this_thread::sleep_for(2s);
   spdlog::info("finished");

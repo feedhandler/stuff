@@ -4,6 +4,10 @@
 
 using namespace std;
 
+// The "bridge" between the c-callback and the C++ object
+// Instead of a custom class we could just use 
+//   std::unique_ptr<Wrapper*> mBridge;
+// but I think it's confusing to mix smart and raw pointers
 struct Wrapper::Bridge
 {
   Bridge(Wrapper* wrapper)
@@ -23,11 +27,13 @@ void Wrapper::c_callback(int id, void *closure)
 // constructor
 Wrapper::Wrapper(string name)
   : mName(name)
+  , mHandle(-1)
   , mBridge(make_unique<Wrapper::Bridge>(this))
 {
   // register a callback to the static c_callback function, and pass
   // the address of the Bridge object as the closure
-  SimpleAPI::registerHandler(Wrapper::c_callback, mBridge.get());
+  // Store the handle in a member variable
+  mHandle = simple_register(Wrapper::c_callback, mBridge.get());
 }
 
 // move constructor
@@ -38,23 +44,13 @@ Wrapper::Wrapper(Wrapper&& other)
   mBridge->mParent=this;
 }
 
-// move assignment
-Wrapper& Wrapper::operator=(Wrapper&& other)
-{
-  if (this!=&other)
-  {
-    mBridge = std::move(other.mBridge);
-    mName = std::move(other.mName);
-    mBridge->mParent = this;
-  }
-
-  return *this;
-}
-
 // destructor must be in the cpp file, see Meyers Modern C++, item 22
-Wrapper::~Wrapper() = default;
+Wrapper::~Wrapper()
+{
+  simple_unregister(mHandle);
+}
 
 void Wrapper::async_callback(int id)
 {
-  spdlog::info("{} Got {}", mName, id);
+  spdlog::info("{} handle {}, Got {}", mName, mHandle, id);
 }

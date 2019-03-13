@@ -16,26 +16,22 @@ public:
   // No copy or assignment
   Wrapper(const Wrapper&) = delete;
   Wrapper& operator=(const Wrapper&) = delete;
-  
-  // Move assignment
-  Wrapper& operator=(Wrapper&&);
+  Wrapper& operator=(Wrapper&&) = delete;
   
   virtual ~Wrapper();
 
   // C++ callback
   virtual void async_callback(int id);
-  
+
 protected:
   std::string mName;
+  int mHandle;
 
 private:
-  // the C callback function, it must match signature of SimpleAPI::callbackFunc_t
+  // the C callback function, it must match signature of the callback function in the SimpleAPI
   static void c_callback(int id, void *closure);
 
   // The "bridge" between the c-callback and the C++ object
   struct Bridge;
   std::unique_ptr<Bridge> mBridge;
-  // TODO could we do this? Maybe it is too confusing...
-  std::unique_ptr<Wrapper*> mParent;
-  // TODO check that it works with multiple inheritance
 };
