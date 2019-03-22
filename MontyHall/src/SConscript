@@ -1,0 +1,3 @@
+Import('env')
+
+env.BuildTest('Main1', 'Main1.cpp')
