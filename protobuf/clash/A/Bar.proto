@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package A;
+
+message Bar
+{
+  string X = 1;
+}

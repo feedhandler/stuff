@@ -2,7 +2,9 @@ syntax = "proto3";
 
 package A;
 
+import "Bar.proto";
+
 message Msg 
 {
-  string X = 1;
+  Bar bar = 1;
 }
