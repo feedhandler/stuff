@@ -1,0 +1,1 @@
+Minimal example for https://github.com/protocolbuffers/protobuf/issues/6010
