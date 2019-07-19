@@ -38,7 +38,7 @@ bool play(int NUM_PRIZES, bool change)
   vector<Prize> prizes(NUM_PRIZES, Prize::Goat);
   
   // set one of the prizes as the car
-  *Random::get(prizes.begin(), prizes.end()) = Prize::Car;
+  *Random::get(prizes) = Prize::Car;
 
   int x=0;
   spdlog::debug("-----------------------------");

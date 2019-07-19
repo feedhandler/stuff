@@ -6,7 +6,7 @@ import cuppa
 cuppa.run(
   default_dependencies = [
     cuppa.location_dependency('spdlog', location="git+https://github.com/gabime/spdlog.git@v1.3.1", sys_include='include'),
-    cuppa.location_dependency('random', location="git+https://github.com/effolkronium/random.git@v1.2.0", sys_include='include'),
+    cuppa.location_dependency('random', location="git+https://github.com/effolkronium/random.git@v1.3.0", sys_include='include'),
   ],
   default_variants = [
     'dbg',
