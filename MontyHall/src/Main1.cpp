@@ -30,12 +30,17 @@ OStream& operator<<(OStream &os, const Prize& p)
 }
 
 // play the game, change your choice according to the parameter
-// NUM_PRIZES is the number of prizes (3, in the classic version of the problem)
-// return a bool indicating whether you won or lost
-bool play(int NUM_PRIZES, bool change)
+// numDoors is the number of doors (3, in the classic version of the problem)
+// return your prize
+Prize play(const int numDoors, bool change)
 {
+  // behind each door is a prize. So we just create a vector of
+  // prizes, it's basically the same. We create a convenience
+  // variable here to make the code clearer
+  const int numPrizes = numDoors;
+
   // fill with goats
-  vector<Prize> prizes(NUM_PRIZES, Prize::Goat);
+  vector<Prize> prizes(numPrizes, Prize::Goat);
   
   // set one of the prizes as the car
   *Random::get(prizes) = Prize::Car;
@@ -46,7 +51,7 @@ bool play(int NUM_PRIZES, bool change)
     spdlog::debug("{}: {}", x++, p);
       
   // choose a prize  
-  auto iFirstChoice = Random::get(0, NUM_PRIZES-1);
+  auto iFirstChoice = Random::get(0, numPrizes-1);
 
   spdlog::debug("First choice: {}", iFirstChoice);
   
@@ -54,7 +59,7 @@ bool play(int NUM_PRIZES, bool change)
   int iMontyChoice=0;
   while(true)
   {
-    iMontyChoice = Random::get(0, NUM_PRIZES-1);
+    iMontyChoice = Random::get(0, numPrizes-1);
     
     // monty must pick different door to the contestant
     if (iMontyChoice==iFirstChoice)
@@ -69,14 +74,14 @@ bool play(int NUM_PRIZES, bool change)
   
   spdlog::debug("Monty's choice: {}", iMontyChoice);
 
-  bool win=false;
+  Prize prize;
   if (change)
   {
     // change your choice
     int iSecondChoice=0;
     while(true)
     {
-      iSecondChoice = Random::get(0, NUM_PRIZES-1);
+      iSecondChoice = Random::get(0, numPrizes-1);
       
       // must pick different door to first choice
       if (iSecondChoice==iFirstChoice)
@@ -91,38 +96,44 @@ bool play(int NUM_PRIZES, bool change)
     
     spdlog::debug("Changed choice: {}", iSecondChoice);
     
-    // did you win?
-    win = prizes[iSecondChoice]==Prize::Car;
+    prize = prizes[iSecondChoice];
   }
   else
   {
-    // did you win?
-    win = prizes[iFirstChoice]==Prize::Car;
+    prize = prizes[iFirstChoice];
   }
   
-  spdlog::debug("Won: {}", win);
+  spdlog::debug("Prize: {}", prize);
   
-  return win;
+  return prize;
+}
+
+void doIt(int numDoors, int numGames, bool change)
+{
+  int cars = 0;
+  int goats = 0;
+  for (int j=0; j<numGames; ++j)
+  {
+    if (Prize::Car == play(numDoors, change))
+      cars++;
+    else
+      goats++;
+  }
+
+  spdlog::info("===================");
+  spdlog::info("numDoors   {:>8}", numDoors);
+  spdlog::info("numGames   {:>8}", numGames);
+  spdlog::info("change     {:>8}", change);
+  spdlog::info("cars won   {:>8}", cars);
+  spdlog::info("goats won  {:>8}", goats);
 }
 
 int main(int argc, char* argv[])
 {
   //~ spdlog::set_level(spdlog::level::debug);
     
-  int numPrizes = 3, numGames=1000;
+  int numDoors = 3, numGames=1000;
   
-  int wonChanged = 0;
-  for (int j=0; j<numGames; ++j)
-    if (play(numPrizes, true))
-      wonChanged++;
-
-  int wonStayed = 0;
-  for (int j=0; j<numGames; ++j)
-    if (play(numPrizes, false))
-      wonStayed++;
-      
-  spdlog::info("numDoors   {: 8}",   numPrizes);
-  spdlog::info("numGames   {: 8}",   numGames);
-  spdlog::info("wonChanged {: 8}", wonChanged);
-  spdlog::info("wonStayed  {: 8}",  wonStayed);
+  doIt(numDoors, numGames, true);
+  doIt(numDoors, numGames, false);
 }
